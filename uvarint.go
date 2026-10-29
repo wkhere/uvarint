@@ -49,6 +49,31 @@ func Uvarint(buf []byte) (uint64, int) {
 	return uint64(buf[1])<<56 | uint64(buf[2])<<48 | uint64(buf[3])<<40 | uint64(buf[4])<<32 | uint64(buf[5])<<24 | uint64(buf[6])<<16 | uint64(buf[7])<<8 | uint64(buf[8]), 9
 }
 
+// UvarintLen returns the expected length of the encoding, based on the encoded input's first byte.
+func UvarintLen(buf []byte) (n int) {
+	switch {
+	case buf[0] <= 0xF0:
+		n = 1
+	case buf[0] <= 0xF8:
+		n = 2
+	case buf[0] == 0xF9:
+		n = 3
+	case buf[0] == 0xFA:
+		n = 4
+	case buf[0] == 0xFB:
+		n = 5
+	case buf[0] == 0xFC:
+		n = 6
+	case buf[0] == 0xFD:
+		n = 7
+	case buf[0] == 0xFE:
+		n = 8
+	default:
+		n = 9
+	}
+	return n
+}
+
 // PutUvarint encodes the received uint64 into varint using the minimum
 // necessary bytes.  The number of bytes written is returned.
 //

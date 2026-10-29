@@ -54,6 +54,15 @@ func TestUvarint(t *testing.T) {
 	}
 }
 
+func TestUvarintLen(t *testing.T) {
+	for i, test := range tests {
+		n := UvarintLen(test.encoded)
+		if n != test.n {
+			t.Errorf("decode %d: got %d want %d", i, n, test.n)
+		}
+	}
+}
+
 func TestEncodeDecode(t *testing.T) {
 	for i, test := range tests {
 		b := make([]byte, len(test.encoded))
